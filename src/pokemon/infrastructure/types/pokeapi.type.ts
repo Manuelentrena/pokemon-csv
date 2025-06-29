@@ -7,3 +7,11 @@ export type PokemonListApiResponse = {
     url: string;
   }>;
 };
+
+export type PokemonApiResponse = {
+  id: number;
+  name: string;
+  height: number;
+  weight: number;
+  base_experience: number;
+};

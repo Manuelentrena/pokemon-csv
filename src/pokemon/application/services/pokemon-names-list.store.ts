@@ -20,7 +20,7 @@ export class PokemonNamesListStore {
 
     const terms = name.toLowerCase().split(/\s+/);
 
-    const filteredResults = this.pokemonNamesList.results.filter(({ name }) =>
+    const filteredResults = this.pokemonNamesList.results.filter((name) =>
       terms.some((term) => name.toLowerCase().includes(term)),
     );
 
