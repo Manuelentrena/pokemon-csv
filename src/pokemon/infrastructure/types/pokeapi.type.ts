@@ -15,3 +15,10 @@ export type PokemonApiResponse = {
   weight: number;
   base_experience: number;
 };
+
+export type PokemonColorApiResponse = {
+  pokemon_species: Array<{
+    name: string;
+    url: string;
+  }>;
+};

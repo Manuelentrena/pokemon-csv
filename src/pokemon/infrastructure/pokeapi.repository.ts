@@ -5,9 +5,11 @@ import { PokemonRepository } from '../domain/pokemon.repository';
 import { PokemonNamesListDto } from '../domain/pokemon-names-list.dto';
 import {
   PokemonApiResponse,
+  PokemonColorApiResponse,
   PokemonListApiResponse,
 } from './types/pokeapi.type';
 import { Pokemon } from '../domain/pokemon.entity';
+import { PokemonColor } from '../domain/pokemon-color.enum';
 
 @Injectable()
 export class PokeApiRepository implements PokemonRepository {
@@ -16,11 +18,9 @@ export class PokeApiRepository implements PokemonRepository {
   async getAllNames(): Promise<PokemonNamesListDto> {
     const url = `https://pokeapi.co/api/v2/pokemon?limit=100000`;
 
-    const response = await lastValueFrom(
+    const { data } = await lastValueFrom(
       this.http.get<PokemonListApiResponse>(url),
     );
-
-    const data = response.data;
 
     return {
       count: data.count,
@@ -31,17 +31,25 @@ export class PokeApiRepository implements PokemonRepository {
   async getOneByName(name: string): Promise<Pokemon> {
     const url = `https://pokeapi.co/api/v2/pokemon/${name}`;
 
-    const response = await lastValueFrom(
+    const { data } = await lastValueFrom(
       this.http.get<PokemonApiResponse>(url),
     );
 
-    const pokemon = response.data;
-
     return new Pokemon(
-      pokemon.name,
-      pokemon.height,
-      pokemon.weight,
-      pokemon.base_experience,
+      data.name,
+      data.height,
+      data.weight,
+      data.base_experience,
     );
+  }
+
+  async getAllByColor(color: PokemonColor): Promise<string[]> {
+    const url = `https://pokeapi.co/api/v2/pokemon-color/${color}`;
+
+    const { data } = await lastValueFrom(
+      this.http.get<PokemonColorApiResponse>(url),
+    );
+
+    return data.pokemon_species.map((species) => species.name);
   }
 }
