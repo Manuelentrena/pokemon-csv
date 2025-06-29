@@ -7,6 +7,7 @@ import { PokemonNamesListStore } from './application/services/pokemon-names-list
 import { PokemonController } from './interfaces/Pokemon.controller';
 import { SearchPokemonByNameUseCase } from './application/search-pokemon-by-name.use-case';
 import { GetAllPokemonNamesUseCase } from './application/get-all-pokemon-names.use-case';
+import { GetPokemonByNameUseCase } from './application/get-pokemon-by-name.use-case';
 
 @Module({
   imports: [HttpModule],
@@ -16,6 +17,7 @@ import { GetAllPokemonNamesUseCase } from './application/get-all-pokemon-names.u
     InitPokemonNamesListUseCase,
     SearchPokemonByNameUseCase,
     GetAllPokemonNamesUseCase,
+    GetPokemonByNameUseCase,
     PokemonNamesListStore,
     {
       provide: PokemonRepository,
