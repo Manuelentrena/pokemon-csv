@@ -1,0 +1,14 @@
+services:
+  pokemon-csv-app:
+    container_name: pokemon-csv-app
+    build:
+      context: .
+      dockerfile: docker/dockerfile.dev.yml
+    command: npm run start:dev
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=development
