@@ -8,6 +8,10 @@ import { PokemonController } from './interfaces/Pokemon.controller';
 import { SearchPokemonByNameUseCase } from './application/search-pokemon-by-name.use-case';
 import { GetAllPokemonNamesUseCase } from './application/get-all-pokemon-names.use-case';
 import { GetPokemonByNameUseCase } from './application/get-pokemon-by-name.use-case';
+import { GetAllPokemonByColorUseCase } from './application/get-all-pokemon-by-color.use-case';
+import { PokemonFailedStore } from './application/services/pokemon-failed.store';
+import { ClearAllPokemonsFailedUseCase } from './application/clear-all-pokemon-failed.use-case';
+import { GetAllPokemonsFailedUseCase } from './application/get-all-pokemons-failed.use-case';
 
 @Module({
   imports: [HttpModule],
@@ -18,7 +22,11 @@ import { GetPokemonByNameUseCase } from './application/get-pokemon-by-name.use-c
     SearchPokemonByNameUseCase,
     GetAllPokemonNamesUseCase,
     GetPokemonByNameUseCase,
+    GetAllPokemonByColorUseCase,
+    GetAllPokemonsFailedUseCase,
+    ClearAllPokemonsFailedUseCase,
     PokemonNamesListStore,
+    PokemonFailedStore,
     {
       provide: PokemonRepository,
       useClass: PokeApiRepository,
