@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, Res } from '@nestjs/common';
 import { SearchPokemonByNameUseCase } from '../application/search-pokemon-by-name.use-case';
 import { GetAllPokemonNamesUseCase } from '../application/get-all-pokemon-names.use-case';
 import { FindByNameQueryDto } from './dto/find-by-name-query.dto';
@@ -8,6 +8,8 @@ import { GetAllPokemonByColorUseCase } from '../application/get-all-pokemon-by-c
 import { GetAllPokemonsFailedUseCase } from '../application/get-all-pokemons-failed.use-case';
 import { ClearAllPokemonsFailedUseCase } from '../application/clear-all-pokemon-failed.use-case';
 import { promiseAllSafe } from 'src/common/utils/promise-all-safe.util';
+import { PokemonCsvGeneratorService } from '../application/services/pokemon-csv-generator.service';
+import { Response } from 'express';
 
 @Controller('pokemon')
 export class PokemonController {
@@ -18,6 +20,7 @@ export class PokemonController {
     private readonly getAllPokemonByColor: GetAllPokemonByColorUseCase,
     private readonly getAllPokemonFailed: GetAllPokemonsFailedUseCase,
     private readonly clearAllPokemonFailed: ClearAllPokemonsFailedUseCase,
+    private readonly pokemonCsvGenerator: PokemonCsvGeneratorService,
   ) {}
 
   @Get('findByName')
@@ -36,7 +39,10 @@ export class PokemonController {
   }
 
   @Get('csv/:color')
-  async getCsvByColor(@Param() params: GetPokemonCsvByColorDto) {
+  async getCsvByColor(
+    @Param() params: GetPokemonCsvByColorDto,
+    @Res() res: Response,
+  ) {
     // Clear the failed Pokemon list before fetching new data
     this.clearAllPokemonFailed.execute();
 
@@ -46,18 +52,26 @@ export class PokemonController {
     );
 
     // Fetch detailed information for each Pokemon
-    const { fulfilled: pokemons, rejected } = await promiseAllSafe(
+    const { fulfilled: pokemons, rejected: _ } = await promiseAllSafe(
       allPokemonByColor.map((name) => this.getPokemonByName.execute(name)),
     );
 
     // Get all failed Pokemon
-    const pokemosFailed = this.getAllPokemonFailed.execute();
+    const pokemonsFailed = this.getAllPokemonFailed.execute();
 
-    return {
+    // Generate CSV
+    const csv = this.pokemonCsvGenerator.generate(
       pokemons,
-      pokemosFailed,
-      errors: rejected,
-    };
+      params.color,
+      pokemonsFailed,
+    );
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename=pokemons-${params.color}.csv`,
+    );
+    res.send(csv);
   }
 
   @Get('getAllNames')
