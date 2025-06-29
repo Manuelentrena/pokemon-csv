@@ -12,6 +12,7 @@ import { GetAllPokemonByColorUseCase } from './application/get-all-pokemon-by-co
 import { PokemonFailedStore } from './application/services/pokemon-failed.store';
 import { ClearAllPokemonsFailedUseCase } from './application/clear-all-pokemon-failed.use-case';
 import { GetAllPokemonsFailedUseCase } from './application/get-all-pokemons-failed.use-case';
+import { PokemonCsvGeneratorService } from './application/services/pokemon-csv-generator.service';
 
 @Module({
   imports: [HttpModule],
@@ -27,6 +28,7 @@ import { GetAllPokemonsFailedUseCase } from './application/get-all-pokemons-fail
     ClearAllPokemonsFailedUseCase,
     PokemonNamesListStore,
     PokemonFailedStore,
+    PokemonCsvGeneratorService,
     {
       provide: PokemonRepository,
       useClass: PokeApiRepository,
