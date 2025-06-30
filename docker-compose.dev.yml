@@ -10,5 +10,17 @@ services:
       - /usr/src/app/node_modules
     ports:
       - '3000:3000'
-    environment:
-      - NODE_ENV=development
+    env_file:
+      - .env
+    depends_on:
+      - pokemon-csv-redis
+
+  pokemon-csv-redis:
+    container_name: pokemon-csv-redis
+    image: redis:7
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis:/data
+volumes:
+  redis:
