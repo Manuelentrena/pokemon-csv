@@ -34,5 +34,6 @@ import { PokemonCsvGeneratorService } from './application/services/pokemon-csv-g
       useClass: PokeApiRepository,
     },
   ],
+  exports: [],
 })
 export class PokemonModule {}
