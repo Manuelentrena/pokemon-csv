@@ -1,4 +1,11 @@
 import { Controller, Get, Param, Query, Res } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiQuery,
+  ApiParam,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { SearchPokemonByNameUseCase } from '../application/search-pokemon-by-name.use-case';
 import { GetAllPokemonNamesUseCase } from '../application/get-all-pokemon-names.use-case';
 import { FindByNameQueryDto } from './dto/find-by-name-query.dto';
@@ -11,6 +18,7 @@ import { promiseAllSafe } from 'src/common/utils/promise-all-safe.util';
 import { PokemonCsvGeneratorService } from '../application/services/pokemon-csv-generator.service';
 import { Response } from 'express';
 
+@ApiTags('pokemon')
 @Controller('pokemon')
 export class PokemonController {
   constructor(
@@ -24,6 +32,13 @@ export class PokemonController {
   ) {}
 
   @Get('findByName')
+  @ApiOperation({ summary: 'Buscar pokémon por nombre' })
+  @ApiQuery({
+    name: 'name',
+    required: true,
+    description: 'Nombre del pokémon a buscar',
+  })
+  @ApiResponse({ status: 200, description: 'Pokémon encontrados' })
   async search(@Query() query: FindByNameQueryDto) {
     const allNames = this.searchByName.execute(query.name);
 
@@ -39,6 +54,17 @@ export class PokemonController {
   }
 
   @Get('csv/:color')
+  @ApiOperation({ summary: 'Obtener CSV de pokémon por color' })
+  @ApiParam({
+    name: 'color',
+    required: true,
+    description: 'Color de los pokémon',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'CSV generado correctamente',
+    type: String,
+  })
   async getCsvByColor(
     @Param() params: GetPokemonCsvByColorDto,
     @Res() res: Response,
@@ -75,6 +101,8 @@ export class PokemonController {
   }
 
   @Get('getAllNames')
+  @ApiOperation({ summary: 'Obtener todos los nombres de pokémon' })
+  @ApiResponse({ status: 200, description: 'Lista de nombres de pokémon' })
   allNames() {
     return this.getAllNames.execute();
   }
