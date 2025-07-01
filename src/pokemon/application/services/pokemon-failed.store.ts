@@ -9,7 +9,7 @@ export class PokemonFailedStore {
   }
 
   getAll(): string[] {
-    return [...this.failed];
+    return [...this.failed].sort((a, b) => a.localeCompare(b));
   }
 
   clear() {
