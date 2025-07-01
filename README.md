@@ -1,98 +1,251 @@
+<p align="center"><img src="https://i.gifer.com/EkFh.gif" width="200" alt="Next Movies Logo"></p>
+
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+<a href="https://github.com/Manuelentrena/pokemon-csv/actions"><img src="https://github.com/Manuelentrena/pokemon-csv/actions/workflows/deploy.yml/badge.svg" alt="Build Status"></a>
+<a href="https://app.codecov.io/gh/Manuelentrena/pokemon-csv"><img src="https://img.shields.io/codecov/c/github/Manuelentrena/pokemon-csv" alt="Test Coverage"></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Pokémon CSV API
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Este proyecto es una API desarrollada con **NestJS** que permite consultar información de Pokémon desde la PokéAPI y generar archivos CSV personalizados. Puedes filtrar Pokémon por color, buscar por nombre y descargar un CSV con sus datos principales. El proyecto está preparado para ejecutarse en entornos Docker y pensado para ser escalable en clúster.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Descripción general
 
-## Project setup
+Esta API expone endpoints para:
 
-```bash
-$ npm install
+- **Buscar Pokémon por nombre** (ignorando mayúsculas/minúsculas y espacios).
+- **Obtener todos los nombres de Pokémon.**
+- **Descargar un archivo CSV** con los Pokémon de un color específico, ordenados por experiencia base.
+- **Gestionar errores y reportar Pokémon no encontrados** durante las búsquedas o generación de CSV.
+- **Cachear resultados en Redis** para mejorar el rendimiento de las consultas.
+
+La aplicación realiza llamadas a la [PokéAPI](https://pokeapi.co/api/v2/) como fuente de datos externa.
+
+---
+
+## Tecnologías usadas
+
+- **Node.js** (v20)
+- **NestJS** (Framework principal)
+- **TypeScript**
+- **PokéAPI** (fuente de datos externa)
+- **Redis** (cache de resultados)
+- **Docker** y **Docker Compose** (para desarrollo y despliegue)
+- **ESLint** + **Prettier** (calidad y formato de código)
+- **Swagger** (documentación interactiva de la API)
+
+---
+
+## Características principales
+
+- **Búsqueda flexible por nombre:**  
+  Permite buscar Pokémon por nombre, ignorando mayúsculas, minúsculas y espacios.
+- **Listado de Pokémon por color:**  
+  Permite obtener y descargar un CSV de todos los Pokémon de un color específico, ordenados por experiencia base.
+- **Gestión de errores:**  
+  Informa de los Pokémon no encontrados durante las búsquedas o generación de CSV.
+- **Generación de archivos CSV** con los campos:  
+  `name;base_experience;height;weight`
+- **Preparado para clúster y Docker:**  
+  Listo para ejecutarse en contenedores y entornos escalables.
+- **Cache con Redis:**  
+  Los resultados de las búsquedas y listados se almacenan en Redis para acelerar futuras consultas.
+- **Documentación interactiva con Swagger:**  
+  Accesible en `/api`.
+
+---
+
+## Endpoints principales
+
+### Buscar Pokémon por nombre
+
+**POST** `/pokemon/findByName`
+
+**Body de ejemplo:**
+
+```json
+{
+  "name": "Pikachu"
+}
 ```
 
-## Compile and run the project
+**Respuesta de ejemplo:**
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```json
+{
+  "count": 2,
+  "results": [
+    {
+      "base_experience": 112,
+      "name": "pikachu",
+      "height": 4,
+      "weight": 60
+    }
+  ],
+  "errors": [
+    // Nombres no encontrados (si los hay)
+  ]
+}
 ```
 
-## Run tests
+---
 
-```bash
-# unit tests
-$ npm run test
+### Descargar CSV de Pokémon por color
 
-# e2e tests
-$ npm run test:e2e
+**GET** `/pokemon/csv/:color`
 
-# test coverage
-$ npm run test:cov
+Devuelve un archivo CSV descargable con todos los Pokémon del color especificado, ordenados por experiencia base.
+
+**Ejemplo de CSV:**
+
+```
+Pokemons of color yellow
+
+Failed pokemons: meloetta, missingno
+
+name;base_experience;height;weight
+pikachu;112;4;60
+psyduck;64;8;196
+...
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### Obtener todos los nombres de Pokémon
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+**GET** `/pokemon/getAllNames`
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+Devuelve un listado de todos los nombres de Pokémon disponibles en la PokéAPI.
+
+---
+
+## Cache con Redis
+
+La API utiliza **Redis** como sistema de cache para acelerar las respuestas de los endpoints más consultados.
+
+### Instrucciones para usar Redis
+
+- Redis se levanta automáticamente con Docker Compose.
+- Puedes inspeccionar las keys almacenadas en Redis accediendo al contenedor:
+
+```sh
+docker exec -it pokemon-csv-redis redis-cli
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+- Para ver todas las keys almacenadas:
 
-## Resources
+```sh
+KEYS *
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+- Para ver el contenido de una key específica (por ejemplo, `pokemon:color:yellow`):
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```sh
+GET pokemon:color:yellow
+```
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Test de CSV
 
-## Stay in touch
+Existen tests **end-to-end** que comprueba que el endpoint `/pokemon/csv/:color` devuelve exactamente el CSV esperado.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Ejecutar el test e2e
 
-## License
+1. Asegúrate de tener Redis y la app levantados (puedes usar Docker Compose).
+2. Ejecuta el test con:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```sh
+npm run test:e2e
+```
+
+El test compara la respuesta del endpoint con un archivo CSV de ejemplo y falla si hay diferencias.
+
+---
+
+## Documentación de la API
+
+La API está documentada con **Swagger** y puedes acceder a la documentación interactiva en:
+
+[http://localhost:3000/api](http://localhost:3000/api)
+
+Desde ahí puedes probar los endpoints y ver los modelos de datos.
+
+---
+
+## Estructura de carpetas relevante
+
+- `src/pokemon/domain/` — Entidades y enums de dominio.
+- `src/pokemon/application/` — Casos de uso y servicios de aplicación.
+- `src/pokemon/infrastructure/` — Repositorios y acceso a PokéAPI.
+- `src/pokemon/interfaces/` — Controladores y DTOs.
+- `docker/` — Dockerfiles para desarrollo y producción.
+- `common/utils/` — Utilidades compartidas (ej: manejo seguro de promesas).
+
+---
+
+## Arrancar el proyecto con Docker
+
+1. **Clona el repositorio**
+
+   ```sh
+   git clone <url-del-repo>
+   cd pokemon-csv
+   ```
+
+2. **Arranca el entorno de desarrollo con Docker Compose**
+
+   ```sh
+   docker compose -f docker-compose.dev.yml up --build
+   ```
+
+3. **Accede a la API**  
+   La API estará disponible en [http://localhost:3000](http://localhost:3000).
+
+---
+
+## Notas
+
+- El entorno de desarrollo usa hot-reload gracias a `npm run start:dev`.
+- Los cambios en el código fuente se reflejan automáticamente en el contenedor.
+- Puedes personalizar los puertos y variables de entorno en el archivo `docker-compose.dev.yml`.
+- El proyecto está preparado para ejecutarse en clústeres Docker/Kubernetes.
+
+---
+
+## Integración continua y despliegue (CI/CD)
+
+Este proyecto utiliza **GitHub Actions** para automatizar:
+
+- Linting del código (`npm run lint`)
+- Tests end-to-end (`npm run test:e2e`)
+- Generación de cobertura de tests (`npm run test:cov`)
+- Build y push de la imagen Docker a GHCR
+- Creación automática de releases en GitHub con changelog
+
+El pipeline se ejecuta automáticamente al hacer push de un tag (`v*`).  
+Puedes ver el estado de los workflows en la pestaña **Actions** del repositorio.
+
+---
+
+## Imagen Docker pública
+
+Cada vez que se crea un tag de versión (`v*`), se construye y publica automáticamente una imagen Docker en [GitHub Container Registry (GHCR)](https://github.com/users/manuelentrena/packages/container/package/pokemon-csv).
+
+Puedes usar la imagen con:
+
+```sh
+docker pull ghcr.io/manuelentrena/pokemon-csv:<version>
+```
+
+## Cobertura de tests
+
+[![codecov](https://codecov.io/gh/manuelentrena/pokemon-csv/branch/main/graph/badge.svg)](https://codecov.io/gh/manuelentrena/pokemon-csv)
+
+La cobertura de tests se genera automáticamente y se puede consultar en [Codecov](https://codecov.io/gh/manuelentrena/pokemon-csv).
+
+---
+
+¿Quieres un ejemplo de cómo quedaría todo junto en tu README? ¡Pídelo!
