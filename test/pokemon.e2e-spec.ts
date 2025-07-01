@@ -12,7 +12,7 @@ describe('PokemonController (e2e)', () => {
   let app: INestApplication<App>;
   let cacheService: CacheService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
