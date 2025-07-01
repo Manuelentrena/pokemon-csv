@@ -5,6 +5,7 @@ import { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
 import * as fs from 'fs';
 import * as path from 'path';
+import { findByPikachuJson } from './fixtures/findByPikachu';
 
 describe('PokemonController (e2e)', () => {
   let app: INestApplication<App>;
@@ -34,5 +35,14 @@ describe('PokemonController (e2e)', () => {
       .expect(200);
 
     expect(response.text.trim()).toBe(expectedCsv.trim());
+  });
+
+  it('GET /pokemon/findByName?name=pikachu should return the expected result', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/pokemon/findByName')
+      .query({ name: 'pikachu' })
+      .expect(200);
+
+    expect(response.body).toEqual(findByPikachuJson);
   });
 });

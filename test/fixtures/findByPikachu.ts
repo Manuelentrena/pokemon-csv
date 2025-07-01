@@ -1,0 +1,108 @@
+export const findByPikachuJson = {
+  count: 17,
+  results: [
+    {
+      name: 'pikachu',
+      base_experience: 4,
+      height: 60,
+      weight: 112,
+    },
+    {
+      name: 'pikachu-rock-star',
+      base_experience: 4,
+      height: 60,
+      weight: 112,
+    },
+    {
+      name: 'pikachu-belle',
+      base_experience: 4,
+      height: 60,
+      weight: 112,
+    },
+    {
+      name: 'pikachu-pop-star',
+      base_experience: 4,
+      height: 60,
+      weight: 112,
+    },
+    {
+      name: 'pikachu-phd',
+      base_experience: 4,
+      height: 60,
+      weight: 112,
+    },
+    {
+      name: 'pikachu-libre',
+      base_experience: 4,
+      height: 60,
+      weight: 112,
+    },
+    {
+      name: 'pikachu-cosplay',
+      base_experience: 4,
+      height: 60,
+      weight: 112,
+    },
+    {
+      name: 'pikachu-original-cap',
+      base_experience: 4,
+      height: 60,
+      weight: 112,
+    },
+    {
+      name: 'pikachu-hoenn-cap',
+      base_experience: 4,
+      height: 60,
+      weight: 112,
+    },
+    {
+      name: 'pikachu-sinnoh-cap',
+      base_experience: 4,
+      height: 60,
+      weight: 112,
+    },
+    {
+      name: 'pikachu-unova-cap',
+      base_experience: 4,
+      height: 60,
+      weight: 112,
+    },
+    {
+      name: 'pikachu-kalos-cap',
+      base_experience: 4,
+      height: 60,
+      weight: 112,
+    },
+    {
+      name: 'pikachu-alola-cap',
+      base_experience: 4,
+      height: 60,
+      weight: 112,
+    },
+    {
+      name: 'pikachu-partner-cap',
+      base_experience: 4,
+      height: 60,
+      weight: 112,
+    },
+    {
+      name: 'pikachu-starter',
+      base_experience: 4,
+      height: 60,
+      weight: 86,
+    },
+    {
+      name: 'pikachu-world-cap',
+      base_experience: 4,
+      height: 60,
+      weight: 112,
+    },
+    {
+      name: 'pikachu-gmax',
+      base_experience: 210,
+      height: 10000,
+      weight: 112,
+    },
+  ],
+  errors: [],
+};
