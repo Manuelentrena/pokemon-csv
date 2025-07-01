@@ -1,0 +1,27 @@
+services:
+  pokemon-csv-app:
+    container_name: pokemon-csv-app
+    build:
+      context: .
+      dockerfile: docker/dockerfile.prod.yml
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env
+    depends_on:
+      - pokemon-csv-redis
+    restart: always
+    mem_limit: 512m
+
+  pokemon-csv-redis:
+    container_name: pokemon-csv-redis
+    image: redis:7
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis:/data
+    restart: always
+    mem_limit: 256m
+
+volumes:
+  redis:
