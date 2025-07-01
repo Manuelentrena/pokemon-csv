@@ -17,6 +17,8 @@ export const redisCacheFactory = (configService: ConfigService) => {
       : `redis://default:${password}@${host}:${port}`;
   }
 
+  console.log(`Connecting to Redis at ${redisUrl} with TTL ${ttl} seconds`);
+
   const redisStore = new KeyvRedis(redisUrl);
   return new Keyv({
     store: redisStore,
