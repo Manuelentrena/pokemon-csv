@@ -6,9 +6,11 @@ import { AppModule } from '../src/app.module';
 import * as fs from 'fs';
 import * as path from 'path';
 import { findByPikachuJson } from './fixtures/findByPikachu';
+import { CacheService } from '../src/common/services/cache.service';
 
 describe('PokemonController (e2e)', () => {
   let app: INestApplication<App>;
+  let cacheService: CacheService;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -17,9 +19,14 @@ describe('PokemonController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
+
+    cacheService = app.get(CacheService);
   });
 
   afterAll(async () => {
+    if (cacheService && typeof cacheService.disconnect === 'function') {
+      await cacheService.disconnect();
+    }
     await app.close();
   });
 

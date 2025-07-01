@@ -18,4 +18,10 @@ export class CacheService {
       console.error('Cache set error:', error);
     }
   }
+
+  async disconnect(): Promise<void> {
+    if (typeof this.cacheManager.disconnect === 'function') {
+      await this.cacheManager.disconnect();
+    }
+  }
 }

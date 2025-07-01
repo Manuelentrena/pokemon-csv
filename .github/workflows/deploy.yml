@@ -47,6 +47,9 @@ jobs:
       - name: Use Test env
         run: cp .env.test .env
 
+      - name: Check Redis connection
+        run: redis-cli -h localhost ping
+
       - name: Install dependencies
         run: npm ci
 
@@ -54,7 +57,7 @@ jobs:
         run: npm run lint
 
       - name: Run Tests (E2E)
-        run: npm run test:e2e
+        run: npm run test:e2e -- --detectOpenHandles
 
       - name: Run Tests (Coverage)
         run: npm run test:cov
